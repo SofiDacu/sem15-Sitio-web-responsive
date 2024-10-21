@@ -45,7 +45,13 @@
       order: -1; /* Mover el formulario de búsqueda al principio */
     }
   }
+
+  .highlight {
+    background-color: lightblue; /* Color de resaltado */
+  }
   </style>
+  
+  
 <body>
     <!-- Contenido en el navbar: LoremImpusu, Dolor, Sit, Amet 
      Y  la derecha una barra Search para buscar --> 
@@ -57,10 +63,11 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNav" >
             <ul class="navbar-nav me-auto">
-              <li class="nav-item"><a class="nav-link active mx-3" href="#">Dolor</a></li>  <!-- mx-3 es para darles un margen horizontal, para separarlos -->
-              <li class="nav-item"><a class="nav-link mx-3" href="#">Sit</a></li>
-              <li class="nav-item"><a class="nav-link mx-3" href="#">Amet</a></li>
-              
+               <!-- mx-3 es para darles un margen horizontal, para separarlos -->
+                <li class="nav-item d-lg-block"><a class="nav-link active mx-lg-3 item" href="#">Dolor</a></li>
+                <li class="nav-item d-lg-block"><a class="nav-link mx-lg-3 item" href="#">Sit</a></li>
+                <li class="nav-item d-lg-block"><a class="nav-link mx-lg-3 item" href="#">Amet</a></li>
+
               <!-- Dropdown de Opciones (visible solo en pantallas MD y SM) -->
               <div class="opcionesNavbar d-md-block d-lg-none">
               <li class="nav-item dropdown" >
@@ -76,8 +83,10 @@
               </li>
             </div>
             </ul>
-            <form class="d-flex ms-auto">
-                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+            <form class="d-flex ms-auto" id="searchForm">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchInput">
+                <button class="btn btn-outline-secondary" type="button" id="clearButton">Clear</button>
+
               </form>
           </div>
         </div>
@@ -107,7 +116,7 @@
 
       <!-- Columna de Opciones (visible solo en tamaño lg) -->
       <div class="col-lg-3 d-none d-lg-block p-3">
-        <button class="btn btn-outline-secondary w-100 mb-2">Opción 1</button>
+        <button class="btn btn-outline-secondary w-100 mb-2">Opción 1</button> <!-- mb-2 es para agregar margen inferior, m:margen, b:bottom -->
         <button class="btn btn-outline-secondary w-100 mb-2">Opción 2</button>
         <button class="btn btn-outline-secondary w-100 mb-2">Opción 3</button>
         <button class="btn btn-outline-secondary w-100">Opción 4</button>
@@ -115,7 +124,7 @@
 
 
       <!-- Columna de Texto -->
-      <div class="col-lg-9 p-3">
+      <div class="col-lg-9 p-3" id="textContainer">
         <div class="texto-columnas">
           <p>Lorem ipsum dolor sit amet,
             consectetur adipiscing
@@ -164,6 +173,55 @@
   <!-- componentes interactivos de bootstrap con js, sirve para hacer el carrousel
  pooper  para agregar ventanas emergentes de Bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Funcionalidad para buscar en Search -->
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Evitar que el formulario se envíe
+      console.log('Formulario enviado'); // Para verificar si el evento se detecta
+  
+      var searchText = document.getElementById('searchInput').value.toLowerCase();
+      var textContainer = document.getElementById('textContainer');
+      var paragraphs = textContainer.getElementsByTagName('p');
+  
+      for (var i = 0; i < paragraphs.length; i++) {
+        var paragraph = paragraphs[i];
+        var paragraphText = paragraph.textContent.toLowerCase();
+  
+        // Remover cualquier resaltado previo
+        paragraph.innerHTML = paragraph.textContent;
+  
+        if (paragraphText.includes(searchText)) {
+          var startIndex = paragraphText.indexOf(searchText);
+          var endIndex = startIndex + searchText.length;
+          var originalText = paragraph.textContent;
+  
+          // Resaltar el texto encontrado
+          paragraph.innerHTML = originalText.substring(0, startIndex) + 
+                                '<span class="highlight">' + originalText.substring(startIndex, endIndex) + 
+                                '</span>' + originalText.substring(endIndex);
+        }
+      }
+    });
+  
+    // Agregar funcionalidad para limpiar la búsqueda
+    document.getElementById('clearButton').addEventListener('click', function() {
+      var textContainer = document.getElementById('textContainer');
+      var paragraphs = textContainer.getElementsByTagName('p');
+      var searchInput = document.getElementById('searchInput');
+  
+      // Limpiar el campo de búsqueda
+      searchInput.value = '';
+  
+      // Restaurar el texto original sin resaltado
+      for (var i = 0; i < paragraphs.length; i++) {
+        paragraphs[i].innerHTML = paragraphs[i].textContent;
+      }
+    });
+  </script>
+    
+  
+  
 </body>
 
 </html>
